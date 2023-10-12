@@ -9,4 +9,4 @@ class HealthStatuses(str, enum.Enum):
 
 class HealthResponse(CamelizedBaseModel):
     status: HealthStatuses
-    errors: list[str] | None = None
+    error: str | None = None
