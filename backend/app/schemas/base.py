@@ -1,7 +1,8 @@
-from pydantic import BaseModel, ConfigDict
-from fastapi.encoders import jsonable_encoder
 from typing import Any
+
 import humps
+from fastapi.encoders import jsonable_encoder
+from pydantic import BaseModel, ConfigDict
 
 
 # * Pure pydantic model without any alias generator
@@ -14,4 +15,6 @@ class PureBaseModel(BaseModel):
 
 # * Camel alias generator model
 class CamelizedBaseModel(PureBaseModel):
-    model_config = ConfigDict(populate_by_name=True, from_attributes=True, alias_generator=humps.camelize)
+    model_config = ConfigDict(
+        populate_by_name=True, from_attributes=True, alias_generator=humps.camelize
+    )

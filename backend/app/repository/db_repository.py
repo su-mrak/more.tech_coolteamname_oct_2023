@@ -1,14 +1,17 @@
 from dataclasses import dataclass
-from sqlalchemy.ext.asyncio import create_async_engine
-from shared.settings import app_settings
+
 from sqlalchemy import text
+from sqlalchemy.ext.asyncio import create_async_engine
+
+from shared.settings import app_settings
 
 
 @dataclass
 class DbRepository:
     def __post_init__(self) -> None:
         self._engine = create_async_engine(
-            f"postgresql+asyncpg://{app_settings.pg_username}:{app_settings.pg_password}@{app_settings.pg_host}:{app_settings.pg_port}/{app_settings.pg_database}",
+            f"postgresql+asyncpg://{app_settings.pg_username}:{app_settings.pg_password}@"
+            f"{app_settings.pg_host}:{app_settings.pg_port}/{app_settings.pg_database}",
         )
 
     async def check(self) -> None:

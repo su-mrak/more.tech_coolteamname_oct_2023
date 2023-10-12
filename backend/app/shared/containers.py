@@ -1,6 +1,7 @@
 from dataclasses import dataclass
-from service.heath_service import HeathService
+
 from repository.db_repository import DbRepository
+from service.heath_service import HeathService
 
 
 @dataclass

@@ -8,20 +8,21 @@ services:
       _UVICORN_PORT: 8000
       _PG_HOST: "postgres"
     build:
-      context: ./backend
+      context: .
       dockerfile: DockerfileWeb
     networks:
       - backend
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     ports:
       - 8000:8000
 
   postgres:
     image: postgis/postgis:16-3.4-alpine
     environment:
-      POSTGRES_USER: db_main
-      POSTGRES_PASSWORD: db_main
+      PGUSER: db_main
+      PGPASSWORD: db_main
       PGDATA: /var/lib/postgresql/data/pgdata
     ports:
       - "5432:5432"
@@ -31,6 +32,11 @@ services:
       - ./app/data/pg/:/var/lib/postgresql/data/
     networks:
       - backend
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 networks:
   backend:

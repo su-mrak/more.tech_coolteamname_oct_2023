@@ -1,5 +1,6 @@
-from schemas.base import CamelizedBaseModel
 import enum
+
+from schemas.base import CamelizedBaseModel
 
 
 class HealthStatuses(str, enum.Enum):
