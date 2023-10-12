@@ -1,0 +1,4 @@
+app/data/mongo_data
+app/data/pg
+app/data/kafka_records_concat
+app/data/grafana

@@ -1,0 +1,37 @@
+version: '3.1'
+
+services:
+  backend_web:
+    restart: always
+    environment:
+      _UVICORN_HOST: "0.0.0.0"
+      _UVICORN_PORT: 8000
+      _PG_HOST: "postgres"
+    build:
+      context: ./backend
+      dockerfile: DockerfileWeb
+    networks:
+      - backend
+    depends_on:
+      - postgres
+    ports:
+      - 8000:8000
+
+  postgres:
+    image: postgres:16.0-bullseye
+    environment:
+      POSTGRES_USER: db_main
+      POSTGRES_PASSWORD: db_main
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    volumes:
+      - ./backend/extra/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./backend/app/data/pg/:/var/lib/postgresql/data/
+    networks:
+      - backend
+
+networks:
+  backend:
+    name: backend
