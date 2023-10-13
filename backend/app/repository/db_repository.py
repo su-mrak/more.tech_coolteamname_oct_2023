@@ -11,6 +11,7 @@ from sqlalchemy.schema import CreateTable
 from persistence.database import ATM, Office
 from schemas.atm import ATM as ATMModel
 from schemas.geo import Coordinate
+from schemas.office import Office as OfficeModel
 from shared.base import logger
 from shared.settings import app_settings
 
@@ -97,6 +98,34 @@ class DbRepository:
                         coordinate=DbRepository.wkb_to_coordinate(row.coordinate),
                         all_day=row.all_day,
                         services=row.services,
+                    )
+                )
+            except ValidationError:
+                logger.exception(f"Unable to parse model, {row=}")
+
+        return res
+
+    async def get_offices(self) -> list[OfficeModel]:
+        async with self._engine.connect() as session:
+            statement = select(Office)
+            rows = (await session.execute(statement)).fetchall()
+        res: list[OfficeModel] = []
+        for row in rows:
+            try:
+                res.append(
+                    OfficeModel(
+                        id=row.internal_id,
+                        address=row.address,
+                        coordinate=DbRepository.wkb_to_coordinate(row.coordinate),
+                        sale_point_format=row.sale_point_format,
+                        legal_entity_schedule=row.legal_entity_schedule,
+                        my_branch=row.my_branch,
+                        kep=row.kep,
+                        has_ramp=row.has_ramp,
+                        suo_availability=row.suo_availability,
+                        office_type=row.office_type,
+                        sale_point_name=row.sale_point_name,
+                        individual_schedule=row.individual_schedule,
                     )
                 )
             except ValidationError:

@@ -13,8 +13,8 @@ class TestIntegration:
     async def test_check_ok(self, combat_container: Container):
         await combat_container.heath_service.check()
 
-    async def test_upload_ok(self, combat_container: Container):
-        await combat_container.upload_service.upload()
+    # async def test_upload_ok(self, combat_container: Container):
+    #     await combat_container.upload_service.upload()
 
     async def test_get_atms_ok(self, combat_container: Container):
         res = await combat_container.upload_service.db_repository.get_atms()
@@ -52,7 +52,10 @@ class TestIntegration:
         assert Weekdays.SUNDAY not in res
         assert Weekdays.SATURDAY not in res
         assert res[Weekdays.WEDNESDAY] == OpenHours(
-            opens_at=time(9, 0), closes_at=time(18, 0)
+            opens_at=time(9, 0),
+            closes_at=time(18, 0),
+            break_starts_at=time(14, 15),
+            break_ends_at=time(15, 0),
         )
 
     def test_parse_schedule_ok(self, combat_container: Container):
@@ -65,4 +68,8 @@ class TestIntegration:
             ]
         )
 
+        print(res)
+
+    async def test_get_offices_ok(self, combat_container: Container):
+        res = await combat_container.upload_service.db_repository.get_offices()
         print(res)

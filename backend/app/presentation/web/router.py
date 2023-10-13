@@ -1,13 +1,10 @@
-from datetime import time
-
 from fastapi import APIRouter
 
 from fastapi_cache.decorator import cache
 from presentation.dependencies import container
 from presentation.web.schemas import HealthResponse, HealthStatuses
 from schemas.atm import ATM
-from schemas.geo import Coordinate
-from schemas.office import Office, OpenHours, Weekdays
+from schemas.office import Office
 from shared.base import logger
 
 router = APIRouter(prefix="")
@@ -35,22 +32,4 @@ async def get_atms() -> list[ATM]:
 @router.get("/offices", response_model=list[Office], response_model_exclude_none=True)
 @cache(expire=60 * 5)
 async def get_offices() -> list[Office]:
-    import uuid
-
-    return [
-        Office(
-            id=uuid.uuid4(),
-            address="AAA",
-            coordinate=Coordinate(lat=55, lng=37),
-            sale_point_name="AAA",
-            individual_schedule={
-                Weekdays.FRIDAY: OpenHours(opens_at=time(9, 0), closes_at=time(18, 0))
-            },
-            legal_entity_schedule={
-                Weekdays.FRIDAY: OpenHours(opens_at=time(9, 0), closes_at=time(18, 0))
-            },
-            office_type="AAA",
-            sale_point_format="AAA",
-            my_branch=False,
-        )
-    ]
+    return await container.view_service.get_offices()

@@ -109,7 +109,6 @@ class UploadService:
             logger.info("Fetched {} offices", len(offices))
 
         for atm in tqdm(atms):
-            break
             await self.db_repository.insert_atm(
                 address=atm["address"],
                 all_day=atm["allDay"],

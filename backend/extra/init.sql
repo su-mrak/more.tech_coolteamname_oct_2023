@@ -15,7 +15,7 @@ CREATE TABLE public.atm (
         UNIQUE (internal_id)
 );
 
-CREATE TABLE public.offile (
+CREATE TABLE public.office (
         sale_point_name TEXT,
         individual_schedule JSONB NOT NULL,
         legal_entity_schedule JSONB NOT NULL,

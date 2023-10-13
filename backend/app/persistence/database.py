@@ -39,7 +39,7 @@ class ATM(GeoObject):
 
 
 class Office(GeoObject):
-    __tablename__ = "offile"
+    __tablename__ = "office"
 
     sale_point_name = Column(Text)
     individual_schedule = Column(JSONB, nullable=False)
