@@ -20,4 +20,4 @@ lint:
 	pre-commit run -a
 
 run-docker-dev:
-	docker compose -f docker-compose-dev.yaml up -в
+	docker compose -f docker-compose-dev.yaml up -d
