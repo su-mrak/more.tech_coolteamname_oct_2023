@@ -5,7 +5,7 @@ from fastapi import APIRouter
 from fastapi_cache.decorator import cache
 from presentation.dependencies import container
 from presentation.web.schemas import HealthResponse, HealthStatuses
-from schemas.atm import ATM, ServiceConfiguration, Services
+from schemas.atm import ATM
 from schemas.geo import Coordinate
 from schemas.office import Office, OpenHours, Weekdays
 from shared.base import logger
@@ -29,42 +29,7 @@ async def check_server_health() -> HealthResponse:
 @router.get("/atms", response_model=list[ATM], response_model_exclude_none=True)
 @cache(expire=60 * 5)
 async def get_atms() -> list[ATM]:
-    import uuid
-
-    return [
-        ATM(
-            id=uuid.uuid4(),
-            address="AAA",
-            coordinate=Coordinate(lat=55, lng=37),
-            all_day=False,
-            services=Services(
-                blind=ServiceConfiguration(
-                    service_activity=True, service_capability=False
-                ),
-                nfc_for_bank_cards=ServiceConfiguration(
-                    service_activity=True, service_capability=False
-                ),
-                qr_read=ServiceConfiguration(
-                    service_activity=True, service_capability=False
-                ),
-                supports_charge_rub=ServiceConfiguration(
-                    service_activity=True, service_capability=False
-                ),
-                supports_eur=ServiceConfiguration(
-                    service_activity=True, service_capability=False
-                ),
-                supports_rub=ServiceConfiguration(
-                    service_activity=True, service_capability=False
-                ),
-                supports_usd=ServiceConfiguration(
-                    service_activity=True, service_capability=False
-                ),
-                wheelchair=ServiceConfiguration(
-                    service_activity=True, service_capability=False
-                ),
-            ),
-        )
-    ]
+    return await container.view_service.get_atms()
 
 
 @router.get("/offices", response_model=list[Office], response_model_exclude_none=True)
@@ -78,8 +43,14 @@ async def get_offices() -> list[Office]:
             address="AAA",
             coordinate=Coordinate(lat=55, lng=37),
             sale_point_name="AAA",
-            schedule={
-                Weekdays.FRI: OpenHours(opens_at=time(9, 0), closes_at=time(18, 0))
+            individual_schedule={
+                Weekdays.FRIDAY: OpenHours(opens_at=time(9, 0), closes_at=time(18, 0))
             },
+            legal_entity_schedule={
+                Weekdays.FRIDAY: OpenHours(opens_at=time(9, 0), closes_at=time(18, 0))
+            },
+            office_type="AAA",
+            sale_point_format="AAA",
+            my_branch=False,
         )
     ]
