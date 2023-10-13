@@ -15,6 +15,9 @@ class AppSettings(BaseSettings):
     uvicorn_workers: int = mp.cpu_count() * 2
     uvicorn_log_level: str = "WARNING"
 
+    redis_host: str = "localhost"
+    redis_port: int = 6379
+
     model_config = SettingsConfigDict(env_prefix="_", env_file=".env")
 
 
