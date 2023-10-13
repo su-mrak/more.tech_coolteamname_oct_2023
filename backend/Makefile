@@ -21,3 +21,11 @@ lint:
 
 run-docker-dev:
 	docker compose -f docker-compose.yaml up -d
+
+jup:
+	. .venv/bin/activate
+	$(PYTHON) -m jupyterlab
+
+jup-darwin:
+	. .venv/bin/activate
+	$(PYTHON) -m jupyterlab --app-dir=/opt/homebrew/share/jupyter/lab
