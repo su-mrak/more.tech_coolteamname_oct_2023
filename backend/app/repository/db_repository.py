@@ -8,7 +8,7 @@ from sqlalchemy.dialects import postgresql
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.schema import CreateTable
 
-from persistence.database import ATM
+from persistence.database import ATM, Office
 from schemas.atm import ATM as ATMModel
 from schemas.geo import Coordinate
 from shared.base import logger
@@ -37,9 +37,43 @@ class DbRepository:
         async with self._engine.connect() as session:
             statement = insert(ATM).values(
                 address=address,
+                coordinate=f"SRID={self.srid};POINT({lng} {lat})",
                 all_day=all_day,
                 services=services,
+            )
+            await session.execute(statement)
+            await session.commit()
+
+    async def insert_office(
+        self,
+        address: str,
+        lat: float,
+        lng: float,
+        sale_point_name: str,
+        individual_schedule: Any,
+        legal_entity_schedule: Any,
+        metro_station: str,
+        my_branch: bool,
+        kep: bool,
+        has_ramp: bool,
+        suo_availability: bool,
+        sale_point_format: str,
+        office_type: str,
+    ) -> None:
+        async with self._engine.connect() as session:
+            statement = insert(Office).values(
+                address=address,
                 coordinate=f"SRID={self.srid};POINT({lng} {lat})",
+                sale_point_name=sale_point_name,
+                individual_schedule=individual_schedule,
+                legal_entity_schedule=legal_entity_schedule,
+                metro_station=metro_station,
+                my_branch=my_branch,
+                kep=kep,
+                has_ramp=has_ramp,
+                suo_availability=suo_availability,
+                sale_point_format=sale_point_format,
+                office_type=office_type,
             )
             await session.execute(statement)
             await session.commit()
