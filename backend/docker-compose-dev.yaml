@@ -5,7 +5,7 @@ services:
     restart: always
     environment:
       _UVICORN_HOST: "0.0.0.0"
-      _UVICORN_PORT: 8000
+      _UVICORN_PORT: 8001
       _PG_HOST: "postgres"
     build:
       context: .
@@ -16,7 +16,7 @@ services:
       postgres:
         condition: service_healthy
     ports:
-      - 8000:8000
+      - 8001:8001
 
   postgres:
     image: postgis/postgis:16-3.4-alpine

@@ -11,7 +11,7 @@ run-web:
 	cd app && $(PYTHON_PRE) -m poetry run python3 web_entrypoint.py
 
 run-infra:
-	docker-compose up -d postgres
+	docker-compose up -f docker-compose-dev.yaml -d postgres
 
 test-integration:
 	cd app && $(PYTHON_PRE) -m pytest -v -s
