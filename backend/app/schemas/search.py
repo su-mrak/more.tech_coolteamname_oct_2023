@@ -6,7 +6,7 @@ from schemas.office import Features as OfficeFeature
 
 
 class GetTopTellers(CamelizedBaseModel):
-    limit: int = 10
+    limit: int = Field(..., example=10)
     lat: float = Field(..., example=55.801432)
     lng: float = Field(..., example=37.702547)
 
