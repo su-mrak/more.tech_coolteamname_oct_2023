@@ -43,7 +43,9 @@ async def get_routes(route: Route) -> Response:
     Returns GeoJson route between 2 points
     """
     try:
-        result = await container.view_service.get_route(route.start, route.end)
+        result = await container.view_service.get_route(
+            route.start, route.end, profile=route.profile
+        )
     except RouteNotFound:
         raise HTTPException(
             detail="Route not found", status_code=status.HTTP_404_NOT_FOUND

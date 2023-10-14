@@ -9,7 +9,21 @@ from shared.settings import app_settings
 
 
 class Profiles(str, enum.Enum):
-    ...
+    """
+    https://giscience.github.io/openrouteservice-r/reference/ors_profile.html
+        ors_profile()
+    #>                car                hgv               bike           roadbike
+    #>      "driving-car"      "driving-hgv"  "cycling-regular"     "cycling-road"
+    #>                mtb             e-bike            walking             hiking
+    #> "cycling-mountain" "cycling-electric"     "foot-walking"      "foot-hiking"
+    #>         wheelchair
+    #>       "wheelchair"
+    """
+
+    FOOT_WALKING = "foot-walking"
+    WHEELCHAIR = "WHEELCHAIR"
+    CYCLING_REGULAR = "cycling-regular"
+    DRIVING_CAR = "driving-car"
 
 
 class RouteNotFound(Exception):
@@ -25,10 +39,12 @@ class ORTSupplier:
             "Accept": "application/json, application/geo+json, application/gpx+xml, img/png; charset=utf-8",
         }
 
-    async def get_route(self, start: Coordinate, end: Coordinate) -> str:
+    async def get_route(
+        self, start: Coordinate, end: Coordinate, profile: Profiles
+    ) -> str:
         async with aiohttp.ClientSession() as session:
             async with session.get(
-                url=f"{self._baseurl}/directions/driving-car",
+                url=f"{self._baseurl}/directions/{profile}",
                 params={
                     "start": start.to_str_tuple(),
                     "end": end.to_str_tuple(),
