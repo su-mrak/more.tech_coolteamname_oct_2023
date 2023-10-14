@@ -56,7 +56,7 @@ class ViewService:
     ) -> str:
         return await self.ort_supplier.get_route(start, end, profile)
 
-    async def get_top_teller_filtered(
+    async def get_top_teller_filtered(  # noqa: CCR001
         self, top_tellers_request: GetTopTellers
     ) -> tuple[list[ATM], list[Office]]:
         atms = await self.db_repository.search_atms(
@@ -72,7 +72,18 @@ class ViewService:
             limit=top_tellers_request.limit,
             features=top_tellers_request.office_feature,
         )
-        if top_tellers_request.office_is_working:
-            ...
+        if top_tellers_request.legal_entity_is_working_now:
+            new_offices = []
+            for office in offices:
+                if office.legal_entity_is_working_now:
+                    new_offices.append(office)
+            offices = new_offices
+
+        if top_tellers_request.individual_is_working_now:
+            new_offices = []
+            for office in offices:
+                if office.individual_is_working_now:
+                    new_offices.append(office)
+            offices = new_offices
 
         return atms, offices
