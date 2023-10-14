@@ -85,6 +85,7 @@ class ViewService:
     def _find_metro(self, point: Coordinate) -> Metro | None:
         begin_point = Point(point.lat, point.lng)
         for metro_point, line, name in self._metro:
+            # Please, forgive me for not using RTree, KDTree, VPTree or at least GeoHash
             distance = begin_point.distance(metro_point) * 1000 * 100
             if distance <= self._metro_max_distance:
                 return Metro(distance=distance, name=name, line=line)
