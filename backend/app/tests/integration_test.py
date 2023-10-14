@@ -1,9 +1,11 @@
+import uuid
 from datetime import time
 
 from persistence.database import ATM, Office
 from schemas.geo import Coordinate
 from schemas.office import OpenHours, Weekdays
 from shared.containers import Container
+from supplier.ort_supplier import Profiles
 
 
 class TestIntegration:
@@ -79,4 +81,11 @@ class TestIntegration:
         await combat_container.view_service.ort_supplier.get_route(
             Coordinate(lat=55.729863, lng=37.609558),
             Coordinate(lat=55.751647, lng=37.625734),
+            profile=Profiles.WHEELCHAIR,
         )
+
+    async def test_get_office_ok(self, combat_container: Container):
+        res = await combat_container.upload_service.db_repository.get_office(
+            id_=uuid.UUID("018b2add-443f-7b5a-af2b-3be58661326c")
+        )
+        print(res)

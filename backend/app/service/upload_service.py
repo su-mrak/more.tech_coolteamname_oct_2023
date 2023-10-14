@@ -11,6 +11,7 @@ from schemas.office import (
     Schedule,
     WeekdaysRu,
     weekday_ru_to_en,
+    weekday_ru_to_int,
     weekdays_ru,
 )
 from shared.base import logger
@@ -76,7 +77,11 @@ class UploadService:
                     continue
 
                 for idx, day in enumerate(weekdays_ru):
-                    if first_day.order() <= idx <= last_day.order():
+                    if (
+                        weekday_ru_to_int[first_day]
+                        <= idx
+                        <= weekday_ru_to_int[last_day]
+                    ):
                         self._process_day(schedule=schedule, day=day, hours=hours)
 
             two_days = days.split(",")
@@ -87,7 +92,9 @@ class UploadService:
         if has_break:
             for idx, day in enumerate(weekdays_ru):
                 if (
-                    break_first_day.order() <= idx <= break_last_day.order()
+                    weekday_ru_to_int[break_first_day]
+                    <= idx
+                    <= weekday_ru_to_int[break_last_day]
                     and weekday_ru_to_en[day] in schedule
                 ):
                     schedule[
