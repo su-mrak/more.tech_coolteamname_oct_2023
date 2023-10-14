@@ -17,6 +17,8 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+    volumes:
+      - "./app/.env:/backend/app/.env"
     ports:
       - 8001:8001
 
