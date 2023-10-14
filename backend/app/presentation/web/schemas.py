@@ -30,6 +30,6 @@ class RouteByTeller(CamelizedBaseModel):
     profile: Profiles = Profiles.FOOT_WALKING
 
     teller_id: uuid.UUID = Field(
-        uuid.UUID("018b2aee-bb0a-1491-d31d-e3c2802f53d5"), example=TellerType.ATM
+        ..., example=uuid.UUID("018b2aee-bb0a-1491-d31d-e3c2802f53d5")
     )
     teller_type: TellerType = Field(..., example=TellerType.ATM)
