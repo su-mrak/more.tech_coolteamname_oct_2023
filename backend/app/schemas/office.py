@@ -9,7 +9,7 @@ from schemas.dates import Weekdays, weekday_en_to_int, weekday_int_to_en
 from schemas.geo import GeoObject
 
 
-class Feature(str, enum.Enum):
+class Features(str, enum.Enum):
     INDIVIDUAL_MORTGAGE_LENDING = "INDIVIDUAL_MORTGAGE_LENDING"
     INDIVIDUAL_DEPOSITS = "INDIVIDUAL_DEPOSITS"
     INDIVIDUAL_CURRENCY_EXCHANGE_OPERATIONS = "INDIVIDUAL_CURRENCY_EXCHANGE_OPERATIONS"
@@ -44,7 +44,7 @@ class Office(GeoObject):
     metro_station: str | None = None
     sale_point_format: str
     office_type: str
-    features: set[Feature] = set()
+    features: set[Features] = set()
 
     @staticmethod
     def _sort_weedkays(dict_: Schedule) -> Schedule:

@@ -4,10 +4,11 @@ import uuid
 from pydantic import Field
 
 from schemas.atm import ATM
+from schemas.atm import Features as ATMFeature
 from schemas.base import CamelizedBaseModel
 from schemas.geo import Coordinate
+from schemas.office import Features as OfficeFeature
 from schemas.office import Office
-from schemas.search import ATMFilter, OfficeFilter
 from service.view_service import TellerType
 from supplier.ort_supplier import Profiles
 
@@ -43,8 +44,8 @@ class GetTopTellers(CamelizedBaseModel):
     lat: float = 55.801432
     lng: float = 37.702547
 
-    atm_filters: ATMFilter = ATMFilter()
-    office_filters: OfficeFilter = OfficeFilter()
+    atm_feature: set[ATMFeature] | None = None
+    office_feature: set[OfficeFeature] | None = None
 
 
 class TopTellersResponse(CamelizedBaseModel):

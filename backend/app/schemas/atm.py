@@ -17,7 +17,8 @@ class Features(str, enum.Enum):
     WITHDRAWAL_USD = "WITHDRAWAL_USD"
     REPLENISHMENT_USD = "REPLENISHMENT_USD"
 
+    ALL_DAY = "ALL_DAY"
+
 
 class ATM(GeoObject):
-    all_day: bool
     features: set[Features]

@@ -13,6 +13,7 @@ from persistence.database import ATM, Office
 from schemas.atm import ATM as ATMModel
 from schemas.atm import Features as ATMFeatures
 from schemas.geo import Coordinate
+from schemas.office import Features as OfficeFeatures
 from schemas.office import Office as OfficeModel
 from shared.base import logger
 from shared.settings import app_settings
@@ -39,15 +40,13 @@ class DbRepository:
         lat: float,
         lng: float,
         address: str,
-        all_day: bool,
         features: list[ATMFeatures],
     ) -> None:
         async with self._engine.connect() as session:
             statement = insert(ATM).values(
                 address=address,
                 coordinate=f"SRID={self.srid};POINT({lng} {lat})",
-                all_day=all_day,
-                services=features,
+                features=features,
             )
             await session.execute(statement)
             await session.commit()
@@ -60,11 +59,8 @@ class DbRepository:
         sale_point_name: str,
         individual_schedule: Any,
         legal_entity_schedule: Any,
+        features: list[OfficeFeatures],
         metro_station: str,
-        my_branch: bool,
-        kep: bool,
-        has_ramp: bool,
-        suo_availability: bool,
         sale_point_format: str,
         office_type: str,
     ) -> None:
@@ -76,10 +72,7 @@ class DbRepository:
                 individual_schedule=individual_schedule,
                 legal_entity_schedule=legal_entity_schedule,
                 metro_station=metro_station,
-                my_branch=my_branch,
-                kep=kep,
-                has_ramp=has_ramp,
-                suo_availability=suo_availability,
+                features=features,
                 sale_point_format=sale_point_format,
                 office_type=office_type,
             )
@@ -103,7 +96,6 @@ class DbRepository:
                         id=row.internal_id,
                         address=row.address,
                         coordinate=DbRepository.wkb_to_coordinate(row.coordinate),
-                        all_day=row.all_day,
                         features=row.services,
                     )
                 )
@@ -125,10 +117,7 @@ class DbRepository:
             coordinate=DbRepository.wkb_to_coordinate(row.coordinate),
             sale_point_format=row.sale_point_format,
             legal_entity_schedule=row.legal_entity_schedule,
-            my_branch=row.my_branch,
-            kep=row.kep,
-            has_ramp=row.has_ramp,
-            suo_availability=row.suo_availability,
+            features=row.features,
             office_type=row.office_type,
             sale_point_name=row.sale_point_name,
             individual_schedule=row.individual_schedule,
@@ -145,8 +134,7 @@ class DbRepository:
             id=row.internal_id,
             address=row.address,
             coordinate=DbRepository.wkb_to_coordinate(row.coordinate),
-            all_day=row.all_day,
-            services=row.services,
+            features=row.features,
         )
 
     async def get_offices(self) -> list[OfficeModel]:
@@ -163,10 +151,7 @@ class DbRepository:
                         coordinate=DbRepository.wkb_to_coordinate(row.coordinate),
                         sale_point_format=row.sale_point_format,
                         legal_entity_schedule=row.legal_entity_schedule,
-                        my_branch=row.my_branch,
-                        kep=row.kep,
-                        has_ramp=row.has_ramp,
-                        suo_availability=row.suo_availability,
+                        features=row.features,
                         office_type=row.office_type,
                         sale_point_name=row.sale_point_name,
                         individual_schedule=row.individual_schedule,

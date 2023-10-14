@@ -1,5 +1,5 @@
 from geoalchemy2.types import Geometry
-from sqlalchemy import BigInteger, Boolean, Column, MetaData, Text
+from sqlalchemy import BigInteger, Column, MetaData, Text
 from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -34,8 +34,7 @@ class GeoObject(Base):
 class ATM(GeoObject):
     __tablename__ = "atm"
 
-    all_day = Column(Boolean, nullable=False, default=False)
-    services = Column(JSONB)
+    features = Column(JSONB)
 
 
 class Office(GeoObject):
@@ -45,9 +44,6 @@ class Office(GeoObject):
     individual_schedule = Column(JSONB, nullable=False)
     legal_entity_schedule = Column(JSONB, nullable=False)
     metro_station = Column(Text)
-    my_branch = Column(Boolean, nullable=False)
-    kep = Column(Boolean, nullable=False)
-    has_ramp = Column(Boolean, nullable=False)
-    suo_availability = Column(Boolean, nullable=False)
+    features = Column(JSONB)
     sale_point_format = Column(Text)
     office_type = Column(Text)

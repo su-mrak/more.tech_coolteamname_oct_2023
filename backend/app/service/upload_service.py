@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from random import randint
 from typing import Any
 
 import ujson
@@ -7,6 +8,7 @@ from tqdm import tqdm
 from repository.db_repository import DbRepository
 from schemas.atm import Features
 from schemas.dates import WeekdaysRu, weekday_ru_to_en, weekday_ru_to_int, weekdays_ru
+from schemas.office import Features as OfficeFeatures
 from schemas.office import OpenHours, Schedule
 from shared.base import logger
 
@@ -100,7 +102,11 @@ class UploadService:
 
         return schedule
 
-    async def upload(self) -> None:  # noqa: CCR001
+    @staticmethod
+    def _get_random_bool() -> bool:
+        return bool(randint(0, 1))  # noqa: S311
+
+    async def upload(self) -> None:  # noqa: CCR001, C901
         with open(self.atms_json_filename) as f:
             atms: list[dict] = ujson.load(f)["atms"]
             logger.info("Fetched {} atms", len(atms))
@@ -110,46 +116,71 @@ class UploadService:
             logger.info("Fetched {} offices", len(offices))
 
         for atm in tqdm(atms):
-            features: list[Features] = []
+            atm_features: list[Features] = []
             if atm["services"]["blind"]["serviceActivity"] == "AVAILABLE":
-                features.append(Features.BLIND)
+                atm_features.append(Features.BLIND)
             if atm["services"]["nfcForBankCards"]["serviceActivity"] == "AVAILABLE":
-                features.append(Features.NFC_FOR_BANK_CARDS)
+                atm_features.append(Features.NFC_FOR_BANK_CARDS)
             if atm["services"]["supportsRub"]["serviceActivity"] == "AVAILABLE":
-                features.append(Features.WITHDRAWAL_RUB)
-                features.append(Features.REPLENISHMENT_RUB)
+                atm_features.append(Features.WITHDRAWAL_RUB)
+                atm_features.append(Features.REPLENISHMENT_RUB)
             if atm["services"]["supportsEur"]["serviceActivity"] == "AVAILABLE":
-                features.append(Features.WITHDRAWAL_EUR)
-                features.append(Features.REPLENISHMENT_EUR)
+                atm_features.append(Features.WITHDRAWAL_EUR)
+                atm_features.append(Features.REPLENISHMENT_EUR)
             if atm["services"]["supportsUsd"]["serviceActivity"] == "AVAILABLE":
-                features.append(Features.WITHDRAWAL_USD)
-                features.append(Features.REPLENISHMENT_USD)
+                atm_features.append(Features.WITHDRAWAL_USD)
+                atm_features.append(Features.REPLENISHMENT_USD)
             if atm["services"]["qrRead"]["serviceActivity"] == "AVAILABLE":
-                features.append(Features.QR_READ)
+                atm_features.append(Features.QR_READ)
             if atm["services"]["wheelchair"]["serviceActivity"] == "AVAILABLE":
-                features.append(Features.WHEELCHAIR)
+                atm_features.append(Features.WHEELCHAIR)
+            if atm["allDay"]:
+                atm_features.append(Features.ALL_DAY)
 
             await self.db_repository.insert_atm(
                 address=atm["address"],
-                all_day=atm["allDay"],
-                features=features,
+                features=atm_features,
                 lng=atm["longitude"],
                 lat=atm["latitude"],
             )
 
-        # for office in tqdm(offices):
-        #     await self.db_repository.insert_office(
-        #         address=office["address"],
-        #         lng=office["longitude"],
-        #         lat=office["latitude"],
-        #         sale_point_format=office["salePointFormat"],
-        #         my_branch=office["myBranch"],
-        #         kep=bool(office["kep"]),
-        #         has_ramp=office["hasRamp"] == "Y",
-        #         suo_availability=office["suoAvailability"] == "Y",
-        #         office_type=office["officeType"],
-        #         sale_point_name=office["salePointName"],
-        #         metro_station=office["metroStation"],
-        #         individual_schedule=self.schedule_to_dict(self.parse_schedule(office["openHoursIndividual"])),
-        #         legal_entity_schedule=self.schedule_to_dict(self.parse_schedule(office["openHours"])),
-        #     )
+        for office in tqdm(offices):
+            office_features: list[OfficeFeatures] = []
+            if office["myBranch"]:
+                office_features.append(OfficeFeatures.MY_BRANCH)
+            if office["kep"]:
+                office_features.append(OfficeFeatures.KEP)
+            if office["hasRamp"] == "Y":
+                office_features.append(OfficeFeatures.HAS_RAMP)
+            if office["suoAvailability"] == "Y":
+                office_features.append(OfficeFeatures.SUO_AVAILABILITY)
+
+            if UploadService._get_random_bool():
+                office_features.append(OfficeFeatures.INDIVIDUAL_MORTGAGE_LENDING)
+            if UploadService._get_random_bool():
+                office_features.append(
+                    OfficeFeatures.INDIVIDUAL_CURRENCY_EXCHANGE_OPERATIONS
+                )
+            if UploadService._get_random_bool():
+                office_features.append(OfficeFeatures.INDIVIDUAL_DEPOSITS)
+            if UploadService._get_random_bool():
+                office_features.append(OfficeFeatures.LEGAL_ENTITY_LENDING)
+            if UploadService._get_random_bool():
+                office_features.append(OfficeFeatures.LEGAL_ENTITY_SETTLEMENT_SERVICE)
+
+            await self.db_repository.insert_office(
+                address=office["address"],
+                lng=office["longitude"],
+                lat=office["latitude"],
+                sale_point_format=office["salePointFormat"],
+                features=office_features,
+                office_type=office["officeType"],
+                sale_point_name=office["salePointName"],
+                metro_station=office["metroStation"],
+                individual_schedule=self.schedule_to_dict(
+                    self.parse_schedule(office["openHoursIndividual"])
+                ),
+                legal_entity_schedule=self.schedule_to_dict(
+                    self.parse_schedule(office["openHours"])
+                ),
+            )
