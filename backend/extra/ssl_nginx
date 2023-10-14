@@ -36,11 +36,10 @@ server {
     listen 8000 ssl;
     server_name kodiki-hack.ru;
 
-    add_header Access-Control-Allow-Headers Content-Type,XFILENAME,XFILECATEGORY,XFILESIZE;
-    add_header access-control-allow-headers authorization;
-
+    add_header 'Access-Control-Allow-Headers' '*';
     add_header 'Access-Control-Allow-Origin' '*';
-    add_header 'Access-Control-Allow-Credentials' true;
+    add_header 'Access-Control-Allow-Credentials' 'true';
+    add_header 'Access-Control-Allow-Methods' '*';
 
 
     location /{
@@ -52,8 +51,10 @@ server {
         proxy_set_header X-Forwarded-Host  $host:$server_port;
         proxy_set_header X-Forwarded-Proto https;
 
+        proxy_set_header 'Access-Control-Allow-Headers' '*';
         proxy_set_header 'Access-Control-Allow-Origin' '*';
-        proxy_set_header 'Access-Control-Allow-Credentials' true;
+        proxy_set_header 'Access-Control-Allow-Credentials' 'true';
+        proxy_set_header 'Access-Control-Allow-Methods' '*';
         proxy_redirect off;
         }
 
