@@ -119,5 +119,5 @@ async def get_top_teller_filtered(
 
 
 @router.post("/tap")
-async def confirm_tap(tellerId: uuid.UUID, typperType: str) -> None:
+async def confirm_tap(tellerId: uuid.UUID, tellerType: str) -> None:
     return None
