@@ -4,10 +4,12 @@ from fastapi.responses import Response
 from fastapi_cache.decorator import cache
 from presentation.dependencies import container
 from presentation.web.schemas import (
+    GetTopTellers,
     HealthResponse,
     HealthStatuses,
     Route,
     RouteByTeller,
+    TopTellersResponse,
 )
 from schemas.atm import ATM
 from schemas.office import Office
@@ -80,3 +82,10 @@ async def get_routes_by_teller(route: RouteByTeller) -> Response:
             detail="Teller not found", status_code=status.HTTP_404_NOT_FOUND
         )
     return Response(content=result, headers={"Content-Type": "application/json"})
+
+
+@router.post("/tellers", response_model=TopTellersResponse)
+async def get_top_teller_filtered(
+    top_tellers_request: GetTopTellers,
+) -> TopTellersResponse:
+    return TopTellersResponse(atms=[], offices=[])
