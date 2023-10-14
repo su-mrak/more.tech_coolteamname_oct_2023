@@ -1,78 +1,11 @@
-import calendar
-import enum
 from datetime import datetime, time
 from typing import Any
 
 from pydantic import Field, validator
 
 from schemas.base import CamelizedBaseModel
+from schemas.dates import Weekdays, weekday_en_to_int, weekday_int_to_en
 from schemas.geo import GeoObject
-
-
-class WeekdaysRu(str, enum.Enum):
-    MONDAY = "пн"
-    TUESDAY = "вт"
-    WEDNESDAY = "ср"
-    THURSDAY = "чт"
-    FRIDAY = "пт"
-    SATURDAY = "сб"
-    SUNDAY = "вс"
-
-
-weekday_ru_to_int: dict[WeekdaysRu, int] = {
-    WeekdaysRu.MONDAY: calendar.MONDAY,
-    WeekdaysRu.TUESDAY: calendar.TUESDAY,
-    WeekdaysRu.WEDNESDAY: calendar.WEDNESDAY,
-    WeekdaysRu.THURSDAY: calendar.THURSDAY,
-    WeekdaysRu.FRIDAY: calendar.FRIDAY,
-    WeekdaysRu.SATURDAY: calendar.SATURDAY,
-    WeekdaysRu.SUNDAY: calendar.SUNDAY,
-}
-
-weekdays_ru: list[WeekdaysRu] = [
-    WeekdaysRu.MONDAY,
-    WeekdaysRu.TUESDAY,
-    WeekdaysRu.WEDNESDAY,
-    WeekdaysRu.THURSDAY,
-    WeekdaysRu.FRIDAY,
-    WeekdaysRu.SATURDAY,
-    WeekdaysRu.SUNDAY,
-]
-
-
-class Weekdays(str, enum.Enum):
-    MONDAY = "monday"
-    TUESDAY = "tuesday"
-    WEDNESDAY = "wednesday"
-    THURSDAY = "thursday"
-    FRIDAY = "friday"
-    SATURDAY = "saturday"
-    SUNDAY = "sunday"
-
-
-_weekday_en_to_int: dict[Weekdays, int] = {
-    Weekdays.MONDAY: calendar.MONDAY,
-    Weekdays.TUESDAY: calendar.TUESDAY,
-    Weekdays.WEDNESDAY: calendar.WEDNESDAY,
-    Weekdays.THURSDAY: calendar.THURSDAY,
-    Weekdays.FRIDAY: calendar.FRIDAY,
-    Weekdays.SATURDAY: calendar.SATURDAY,
-    Weekdays.SUNDAY: calendar.SUNDAY,
-}
-
-_weekday_int_to_en: dict[int, Weekdays] = {
-    value: key for key, value in _weekday_en_to_int.items()
-}
-
-weekday_ru_to_en: dict[WeekdaysRu, Weekdays] = {
-    WeekdaysRu.MONDAY: Weekdays.MONDAY,
-    WeekdaysRu.TUESDAY: Weekdays.TUESDAY,
-    WeekdaysRu.WEDNESDAY: Weekdays.WEDNESDAY,
-    WeekdaysRu.THURSDAY: Weekdays.THURSDAY,
-    WeekdaysRu.FRIDAY: Weekdays.FRIDAY,
-    WeekdaysRu.SATURDAY: Weekdays.SATURDAY,
-    WeekdaysRu.SUNDAY: Weekdays.SUNDAY,
-}
 
 
 class OpenHours(CamelizedBaseModel):
@@ -104,7 +37,7 @@ class Office(GeoObject):
     @staticmethod
     def _sort_weedkays(dict_: Schedule) -> Schedule:
         new_dict: Schedule = {}
-        for key in sorted(dict_.keys(), key=lambda x: _weekday_en_to_int[x]):
+        for key in sorted(dict_.keys(), key=lambda x: weekday_en_to_int[x]):
             new_dict[key] = dict_[key]
 
         return new_dict
@@ -122,7 +55,7 @@ class Office(GeoObject):
         now_ = datetime.now()
         try:
             day_schedule: OpenHours = values["individual_schedule"][
-                _weekday_int_to_en[now_.weekday()]
+                weekday_int_to_en[now_.weekday()]
             ]
         except KeyError:
             return False
@@ -149,7 +82,7 @@ class Office(GeoObject):
         now_ = datetime.now()
         try:
             day_schedule: OpenHours = values["legal_entity_schedule"][
-                _weekday_int_to_en[now_.weekday()]
+                weekday_int_to_en[now_.weekday()]
             ]
         except KeyError:
             return False

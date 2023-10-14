@@ -6,14 +6,8 @@ from tqdm import tqdm
 
 from repository.db_repository import DbRepository
 from schemas.atm import ServiceConfiguration, Services
-from schemas.office import (
-    OpenHours,
-    Schedule,
-    WeekdaysRu,
-    weekday_ru_to_en,
-    weekday_ru_to_int,
-    weekdays_ru,
-)
+from schemas.dates import WeekdaysRu, weekday_ru_to_en, weekday_ru_to_int, weekdays_ru
+from schemas.office import OpenHours, Schedule
 from shared.base import logger
 
 
