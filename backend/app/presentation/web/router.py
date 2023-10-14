@@ -36,6 +36,9 @@ class Tags(str, enum.Enum):
     tags=[Tags.SERVICE],
 )
 async def check_server_health() -> HealthResponse:
+    """
+    Check service health
+    """
     try:
         await container.heath_service.check()
     except Exception as exc:
@@ -55,6 +58,9 @@ async def check_server_health() -> HealthResponse:
 )
 @cache(expire=60 * 5)
 async def get_atms() -> list[ATM]:
+    """
+    Get all ATMS
+    """
     return await container.view_service.get_atms()
 
 
@@ -66,6 +72,9 @@ async def get_atms() -> list[ATM]:
 )
 @cache(expire=60 * 5)
 async def get_offices() -> list[Office]:
+    """
+    Get all Offices
+    """
     return await container.view_service.get_offices()
 
 
