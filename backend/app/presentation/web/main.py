@@ -20,13 +20,6 @@ def create_app() -> FastAPI:
     app = FastAPI()
 
     app.include_router(router)
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=["*"],
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
 
     @app.on_event("startup")
     async def startup() -> None:
@@ -39,4 +32,11 @@ def create_app() -> FastAPI:
     def rapidoc() -> str:
         return _rapidoc_html.format(openapi_url="/openapi.json")
 
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
     return app
