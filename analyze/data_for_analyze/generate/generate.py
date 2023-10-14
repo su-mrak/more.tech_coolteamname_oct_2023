@@ -1,4 +1,3 @@
-
 from datetime import datetime
 from datetime import date
 import pytz
@@ -37,13 +36,6 @@ def current_hour(timezone_='Europe/Moscow') -> int:
     #debug
     print(current_weekday)
 
-    #returns weekdays from 0 (mon) to 6 (sun)
-    return current_weekday
-
-def current_daytime() -> 'string':
-    
-    
-
 random_district_type()
 current_weekday()
-
+current_time()
