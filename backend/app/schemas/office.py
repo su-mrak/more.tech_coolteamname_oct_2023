@@ -1,4 +1,5 @@
 import enum
+import uuid
 from datetime import datetime, time
 from typing import Any
 
@@ -34,6 +35,7 @@ Schedule = dict[Weekdays, OpenHours]
 
 
 class Office(GeoObject):
+    id_: uuid.UUID = Field(..., alias="id")
     sale_point_name: str = Field(
         ..., example="ДО «Солнечногорский» Филиала № 7701 Банка ВТБ (ПАО)"
     )

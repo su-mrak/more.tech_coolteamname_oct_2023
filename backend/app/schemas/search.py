@@ -12,3 +12,4 @@ class GetTopTellers(CamelizedBaseModel):
 
     atm_feature: set[ATMFeature] | None = None
     office_feature: set[OfficeFeature] | None = None
+    office_is_working: bool | None = None

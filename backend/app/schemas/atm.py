@@ -1,4 +1,7 @@
 import enum
+import uuid
+
+from pydantic import Field
 
 from schemas.geo import GeoObject
 
@@ -21,4 +24,5 @@ class Features(str, enum.Enum):
 
 
 class ATM(GeoObject):
+    id_: uuid.UUID = Field(..., alias="id")
     features: set[Features]
