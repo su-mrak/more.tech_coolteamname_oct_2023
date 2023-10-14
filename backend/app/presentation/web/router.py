@@ -112,6 +112,9 @@ async def get_routes_by_teller(route: RouteByTeller) -> Response:
 async def get_top_teller_filtered(
     top_tellers_request: GetTopTellers,
 ) -> TopTellersResponse:
+    """
+    Search for nearest ATMs and Offices filtered and sorted
+    """
     atms, offices = await container.view_service.get_top_teller_filtered(
         top_tellers_request=top_tellers_request
     )
@@ -120,4 +123,7 @@ async def get_top_teller_filtered(
 
 @router.post("/tap")
 async def confirm_tap(tellerId: uuid.UUID, tellerType: str) -> None:
+    """
+    Confirm user tap
+    """
     return None
