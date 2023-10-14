@@ -1,4 +1,5 @@
 import enum
+import uuid
 
 from fastapi import APIRouter, HTTPException, status
 from fastapi.responses import Response
@@ -115,3 +116,8 @@ async def get_top_teller_filtered(
         top_tellers_request=top_tellers_request
     )
     return TopTellersResponse(atms=atms, offices=offices)
+
+
+@router.post("/tap")
+async def confirm_tap(tellerId: uuid.UUID, typperType: str) -> None:
+    return None

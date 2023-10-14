@@ -96,8 +96,8 @@ class TestIntegration:
     async def test_get_top_tellers(self, combat_container: Container):
         res = await combat_container.view_service.get_top_teller_filtered(
             top_tellers_request=GetTopTellers(
-                lat=55.801432,
-                lng=37.702547,
+                lat=55.803459,
+                lng=37.798224,
                 limit=100,
                 atm_feature={ATMFeatures.BLIND},
                 office_feature={OfficeFeatures.INDIVIDUAL_DEPOSITS},
