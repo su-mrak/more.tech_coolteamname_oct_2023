@@ -96,7 +96,7 @@ class DbRepository:
                         id=row.internal_id,
                         address=row.address,
                         coordinate=DbRepository.wkb_to_coordinate(row.coordinate),
-                        features=row.services,
+                        features=row.features,
                     )
                 )
             except ValidationError:

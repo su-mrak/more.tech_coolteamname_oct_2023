@@ -81,7 +81,7 @@ class TestIntegration:
         await combat_container.view_service.ort_supplier.get_route(
             Coordinate(lat=55.729863, lng=37.609558),
             Coordinate(lat=55.751647, lng=37.625734),
-            profile=Profiles.WHEELCHAIR,
+            profile=Profiles.DRIVING_CAR,
         )
 
     async def test_get_office_ok(self, combat_container: Container):

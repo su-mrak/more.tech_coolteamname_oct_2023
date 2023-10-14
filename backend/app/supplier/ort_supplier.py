@@ -53,6 +53,8 @@ class ORTSupplier:
             ) as res:
                 if res.status == status.HTTP_404_NOT_FOUND:
                     raise RouteNotFound("Route not found")
+                text = await res.text()
+                if not res.ok:
+                    raise Exception(f"Non ok status code, {res.status=}, {text=}")
 
-                res.raise_for_status()
-                return await res.text()
+                return text
