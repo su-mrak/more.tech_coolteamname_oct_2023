@@ -49,23 +49,6 @@ class Weekdays(str, enum.Enum):
     SATURDAY = "saturday"
     SUNDAY = "sunday"
 
-    def order(self) -> int:
-        if self == self.__class__.MONDAY:
-            return 0
-        if self == self.__class__.TUESDAY:
-            return 1
-        if self == self.__class__.WEDNESDAY:
-            return 2
-        if self == self.__class__.THURSDAY:
-            return 3
-        if self == self.__class__.FRIDAY:
-            return 4
-        if self == self.__class__.SATURDAY:
-            return 5
-        if self == self.__class__.SUNDAY:
-            return 6
-        return -1
-
 
 _weekday_en_to_int: dict[Weekdays, int] = {
     Weekdays.MONDAY: calendar.MONDAY,
@@ -157,6 +140,7 @@ class Office(GeoObject):
             return True
         return False
 
+    # TODO make dry
     @validator("legal_entity_is_working_now", always=True)
     @classmethod
     def set_legal_entity_working_now(
