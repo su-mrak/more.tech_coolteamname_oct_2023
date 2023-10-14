@@ -18,7 +18,13 @@ with open(PARENT / "rapidoc.html", "r") as f:
 
 def create_app() -> FastAPI:
     app = FastAPI()
-
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
     app.include_router(router)
 
     @app.on_event("startup")
@@ -32,11 +38,4 @@ def create_app() -> FastAPI:
     def rapidoc() -> str:
         return _rapidoc_html.format(openapi_url="/openapi.json")
 
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=["*"],
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
     return app
