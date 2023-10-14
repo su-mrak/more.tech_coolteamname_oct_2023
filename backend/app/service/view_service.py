@@ -72,5 +72,7 @@ class ViewService:
             limit=top_tellers_request.limit,
             features=top_tellers_request.office_feature,
         )
+        if top_tellers_request.office_is_working:
+            ...
 
         return atms, offices
