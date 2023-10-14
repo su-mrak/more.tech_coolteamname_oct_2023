@@ -1,11 +1,13 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException, status
+from fastapi.responses import Response
 
 from fastapi_cache.decorator import cache
 from presentation.dependencies import container
-from presentation.web.schemas import HealthResponse, HealthStatuses
+from presentation.web.schemas import HealthResponse, HealthStatuses, Route
 from schemas.atm import ATM
 from schemas.office import Office
 from shared.base import logger
+from supplier.ort_supplier import RouteNotFound
 
 router = APIRouter(prefix="")
 
@@ -33,3 +35,17 @@ async def get_atms() -> list[ATM]:
 @cache(expire=60 * 5)
 async def get_offices() -> list[Office]:
     return await container.view_service.get_offices()
+
+
+@router.post("/routes")
+async def get_routes(route: Route) -> Response:
+    """
+    Returns GeoJson route between 2 points
+    """
+    try:
+        result = await container.view_service.get_route(route.start, route.end)
+    except RouteNotFound:
+        raise HTTPException(
+            detail="Route not found", status_code=status.HTTP_404_NOT_FOUND
+        )
+    return Response(content=result, headers={"Content-Type": "application/json"})

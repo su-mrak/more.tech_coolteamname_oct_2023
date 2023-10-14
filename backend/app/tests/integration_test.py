@@ -1,6 +1,7 @@
 from datetime import time
 
 from persistence.database import ATM, Office
+from schemas.geo import Coordinate
 from schemas.office import OpenHours, Weekdays
 from shared.containers import Container
 
@@ -73,3 +74,9 @@ class TestIntegration:
     async def test_get_offices_ok(self, combat_container: Container):
         res = await combat_container.upload_service.db_repository.get_offices()
         print(res)
+
+    async def test_ort_supplier_get_router(self, combat_container: Container):
+        await combat_container.view_service.ort_supplier.get_route(
+            Coordinate(lat=55.729863, lng=37.609558),
+            Coordinate(lat=55.751647, lng=37.625734),
+        )

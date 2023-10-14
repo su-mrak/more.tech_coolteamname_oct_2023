@@ -9,6 +9,9 @@ class Coordinate(CamelizedBaseModel):
     lat: float
     lng: float
 
+    def to_str_tuple(self) -> str:
+        return f"{self.lng},{self.lat}"
+
 
 class GeoObject(CamelizedBaseModel):
     id_: uuid.UUID = Field(..., alias="id")
