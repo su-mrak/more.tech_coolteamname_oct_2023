@@ -27,10 +27,15 @@ def current_weekday(timezone_='Europe/Moscow') -> int:
 
     #returns weekdays from 0 (mon) to 6 (sun)
     return current_weekday
-def current_time(timezone_='Europe/Moscow') -> int:
+
+def current_hour(timezone_='Europe/Moscow') -> int:
     current_timezone = pytz.timezone(timezone_)
-    current_date = datetime.now(current_timezone).time()
-    print(current_date)
+    current_date = datetime.now(current_timezone).date()
+    current_weekday = current_date.weekday()
+
+    #debug
+    print(current_weekday)
+
 random_district_type()
 current_weekday()
 current_time()
