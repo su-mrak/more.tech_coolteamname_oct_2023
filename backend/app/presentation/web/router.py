@@ -6,7 +6,6 @@ from fastapi.responses import Response
 from fastapi_cache.decorator import cache
 from presentation.dependencies import container
 from presentation.web.schemas import (
-    GetTopTellers,
     HealthResponse,
     HealthStatuses,
     Route,
@@ -15,6 +14,7 @@ from presentation.web.schemas import (
 )
 from schemas.atm import ATM
 from schemas.office import Office
+from schemas.search import GetTopTellers
 from service.view_service import TellerNotFound
 from shared.base import logger
 from supplier.ort_supplier import RouteNotFound
@@ -111,4 +111,7 @@ async def get_routes_by_teller(route: RouteByTeller) -> Response:
 async def get_top_teller_filtered(
     top_tellers_request: GetTopTellers,
 ) -> TopTellersResponse:
-    return TopTellersResponse(atms=[], offices=[])
+    atms, offices = await container.view_service.get_top_teller_filtered(
+        top_tellers_request=top_tellers_request
+    )
+    return TopTellersResponse(atms=atms, offices=offices)

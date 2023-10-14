@@ -6,6 +6,7 @@ from repository.db_repository import DbRepository
 from schemas.atm import ATM
 from schemas.geo import Coordinate
 from schemas.office import Office
+from schemas.search import GetTopTellers
 from supplier.ort_supplier import ORTSupplier, Profiles
 
 
@@ -54,3 +55,22 @@ class ViewService:
         self, start: Coordinate, end: Coordinate, profile: Profiles
     ) -> str:
         return await self.ort_supplier.get_route(start, end, profile)
+
+    async def get_top_teller_filtered(
+        self, top_tellers_request: GetTopTellers
+    ) -> tuple[list[ATM], list[Office]]:
+        atms = await self.db_repository.search_atms(
+            lat=top_tellers_request.lat,
+            lng=top_tellers_request.lng,
+            limit=top_tellers_request.limit,
+            features=top_tellers_request.atm_feature,
+        )
+
+        offices = await self.db_repository.search_offices(
+            lat=top_tellers_request.lat,
+            lng=top_tellers_request.lng,
+            limit=top_tellers_request.limit,
+            features=top_tellers_request.office_feature,
+        )
+
+        return atms, offices

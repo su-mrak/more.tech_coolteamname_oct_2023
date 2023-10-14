@@ -2,6 +2,7 @@ import uuid
 from dataclasses import dataclass
 from typing import Any
 
+from geoalchemy2.functions import ST_Distance
 from pydantic import ValidationError
 from shapely import wkb
 from sqlalchemy import insert, select, text
@@ -45,11 +46,14 @@ class DbRepository:
         async with self._engine.connect() as session:
             statement = insert(ATM).values(
                 address=address,
-                coordinate=f"SRID={self.srid};POINT({lng} {lat})",
+                coordinate=self.make_point(lat=lat, lng=lng),
                 features=features,
             )
             await session.execute(statement)
             await session.commit()
+
+    def make_point(self, lat: float, lng: float) -> str:
+        return f"SRID={self.srid};POINT({lng} {lat})"
 
     async def insert_office(
         self,
@@ -67,7 +71,7 @@ class DbRepository:
         async with self._engine.connect() as session:
             statement = insert(Office).values(
                 address=address,
-                coordinate=f"SRID={self.srid};POINT({lng} {lat})",
+                coordinate=self.make_point(lat=lat, lng=lng),
                 sale_point_name=sale_point_name,
                 individual_schedule=individual_schedule,
                 legal_entity_schedule=legal_entity_schedule,
@@ -165,5 +169,76 @@ class DbRepository:
     def compile_table(self, table) -> str:  # noqa: ANN001
         return CreateTable(table.__table__).compile(dialect=postgresql.dialect())
 
-    # def search_atms(self, lat: float, lng: float, limit: int, filters: ATMFilter) -> list[ATMModel]:
-    #     ...
+    async def search_atms(
+        self, lat: float, lng: float, limit: int, features: set[ATMFeatures] | None
+    ) -> list[ATMModel]:
+        async with self._engine.connect() as session:
+            statement = (
+                select(ATM)
+                .order_by(
+                    ST_Distance(ATM.coordinate, self.make_point(lat=lat, lng=lng))
+                )
+                .limit(limit)
+            )
+            if features is not None:
+                statement = statement.where(
+                    ATM.features.comparator.contains(
+                        [feature.value for feature in features]
+                    )
+                )
+
+            rows = (await session.execute(statement)).fetchall()
+        res: list[ATMModel] = []
+        for row in rows:
+            try:
+                res.append(
+                    ATMModel(
+                        id=row.internal_id,
+                        address=row.address,
+                        coordinate=DbRepository.wkb_to_coordinate(row.coordinate),
+                        features=row.features,
+                    )
+                )
+            except ValidationError:
+                logger.exception(f"Unable to parse model, {row=}")
+
+        return res
+
+    async def search_offices(
+        self, lat: float, lng: float, limit: int, features: set[OfficeFeatures] | None
+    ) -> list[OfficeModel]:
+        async with self._engine.connect() as session:
+            statement = (
+                select(Office)
+                .order_by(
+                    ST_Distance(Office.coordinate, self.make_point(lat=lat, lng=lng))
+                )
+                .limit(limit)
+            )
+            if features is not None:
+                statement = statement.where(
+                    Office.features.comparator.contains(
+                        [feature.value for feature in features]
+                    )
+                )
+            rows = (await session.execute(statement)).fetchall()
+        res: list[OfficeModel] = []
+        for row in rows:
+            try:
+                res.append(
+                    OfficeModel(
+                        id=row.internal_id,
+                        address=row.address,
+                        coordinate=DbRepository.wkb_to_coordinate(row.coordinate),
+                        sale_point_format=row.sale_point_format,
+                        legal_entity_schedule=row.legal_entity_schedule,
+                        features=row.features,
+                        office_type=row.office_type,
+                        sale_point_name=row.sale_point_name,
+                        individual_schedule=row.individual_schedule,
+                    )
+                )
+            except ValidationError:
+                logger.exception(f"Unable to parse model, {row=}")
+
+        return res

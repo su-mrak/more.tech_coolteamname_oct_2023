@@ -2,8 +2,11 @@ import uuid
 from datetime import time
 
 from persistence.database import ATM, Office
+from schemas.atm import Features as ATMFeatures
 from schemas.geo import Coordinate
+from schemas.office import Features as OfficeFeatures
 from schemas.office import OpenHours, Weekdays
+from schemas.search import GetTopTellers
 from shared.containers import Container
 from supplier.ort_supplier import Profiles
 
@@ -87,5 +90,17 @@ class TestIntegration:
     async def test_get_office_ok(self, combat_container: Container):
         res = await combat_container.upload_service.db_repository.get_office(
             id_=uuid.UUID("018b2add-443f-7b5a-af2b-3be58661326c")
+        )
+        print(res)
+
+    async def test_get_top_tellers(self, combat_container: Container):
+        res = await combat_container.view_service.get_top_teller_filtered(
+            top_tellers_request=GetTopTellers(
+                lat=55.801432,
+                lng=37.702547,
+                limit=100,
+                atm_feature={ATMFeatures.BLIND},
+                office_feature={OfficeFeatures.INDIVIDUAL_DEPOSITS},
+            ),
         )
         print(res)

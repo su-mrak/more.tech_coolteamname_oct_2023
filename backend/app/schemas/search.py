@@ -1,13 +1,14 @@
-import enum
+from pydantic import Field
+
+from schemas.atm import Features as ATMFeature
+from schemas.base import CamelizedBaseModel
+from schemas.office import Features as OfficeFeature
 
 
-class OfficeFeature(str, enum.Enum):
-    INDIVIDUAL_MORTGAGE_LENDING = "INDIVIDUAL_MORTGAGE_LENDING"
-    INDIVIDUAL_DEPOSITS = "INDIVIDUAL_DEPOSITS"
-    INDIVIDUAL_CURRENCY_EXCHANGE_OPERATIONS = "INDIVIDUAL_CURRENCY_EXCHANGE_OPERATIONS"
+class GetTopTellers(CamelizedBaseModel):
+    limit: int = 10
+    lat: float = Field(..., example=55.801432)
+    lng: float = Field(..., example=37.702547)
 
-    LEGAL_ENTITY_LENDING = "LEGAL_ENTITY_LENDING"
-    LEGAL_ENTITY_SETTLEMENT_SERVICE = "LEGAL_ENTITY_SETTLEMENT_SERVICE"
-
-    AVAILABLE_WITH_LIMITED_MOBILITY = "AVAILABLE_WITH_LIMITED_MOBILITY"
-    IS_WORKING_NOW = "IS_WORKING_NOW"
+    atm_feature: set[ATMFeature] | None = None
+    office_feature: set[OfficeFeature] | None = None

@@ -4,10 +4,8 @@ import uuid
 from pydantic import Field
 
 from schemas.atm import ATM
-from schemas.atm import Features as ATMFeature
 from schemas.base import CamelizedBaseModel
 from schemas.geo import Coordinate
-from schemas.office import Features as OfficeFeature
 from schemas.office import Office
 from service.view_service import TellerType
 from supplier.ort_supplier import Profiles
@@ -37,15 +35,6 @@ class RouteByTeller(CamelizedBaseModel):
         ..., example=uuid.UUID("018b2aee-bb0a-1491-d31d-e3c2802f53d5")
     )
     teller_type: TellerType = Field(..., example=TellerType.ATM)
-
-
-class GetTopTellers(CamelizedBaseModel):
-    limit: int = 10
-    lat: float = 55.801432
-    lng: float = 37.702547
-
-    atm_feature: set[ATMFeature] | None = None
-    office_feature: set[OfficeFeature] | None = None
 
 
 class TopTellersResponse(CamelizedBaseModel):
