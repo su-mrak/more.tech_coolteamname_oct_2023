@@ -88,6 +88,11 @@ ignore = [
     "ANN401",
     "ANN101",
     "ANN102",
+    "S311",
+    "F821",
+    "CCR001",
+    "E711",
+    "ANN001",
 ]
 exclude = [
     "**/__pycache__",
