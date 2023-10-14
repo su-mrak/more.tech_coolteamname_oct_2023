@@ -1,3 +1,4 @@
+import uuid
 from dataclasses import dataclass
 from typing import Any
 
@@ -104,6 +105,43 @@ class DbRepository:
                 logger.exception(f"Unable to parse model, {row=}")
 
         return res
+
+    async def get_office(self, id_: uuid.UUID) -> OfficeModel | None:
+        async with self._engine.connect() as session:
+            statement = select(Office).where(Office.internal_id == id_)
+            row = (await session.execute(statement)).fetchone()
+        if row is None:
+            return None
+
+        return OfficeModel(
+            id=row.internal_id,
+            address=row.address,
+            coordinate=DbRepository.wkb_to_coordinate(row.coordinate),
+            sale_point_format=row.sale_point_format,
+            legal_entity_schedule=row.legal_entity_schedule,
+            my_branch=row.my_branch,
+            kep=row.kep,
+            has_ramp=row.has_ramp,
+            suo_availability=row.suo_availability,
+            office_type=row.office_type,
+            sale_point_name=row.sale_point_name,
+            individual_schedule=row.individual_schedule,
+        )
+
+    async def get_atm(self, id_: uuid.UUID) -> ATMModel | None:
+        async with self._engine.connect() as session:
+            statement = select(ATM).where(ATM.internal_id == id_)
+            row = (await session.execute(statement)).fetchone()
+        if row is None:
+            return None
+
+        return ATMModel(
+            id=row.internal_id,
+            address=row.address,
+            coordinate=DbRepository.wkb_to_coordinate(row.coordinate),
+            all_day=row.all_day,
+            services=row.services,
+        )
 
     async def get_offices(self) -> list[OfficeModel]:
         async with self._engine.connect() as session:

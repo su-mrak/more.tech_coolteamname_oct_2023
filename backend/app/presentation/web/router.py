@@ -3,9 +3,15 @@ from fastapi.responses import Response
 
 from fastapi_cache.decorator import cache
 from presentation.dependencies import container
-from presentation.web.schemas import HealthResponse, HealthStatuses, Route
+from presentation.web.schemas import (
+    HealthResponse,
+    HealthStatuses,
+    Route,
+    RouteByTeller,
+)
 from schemas.atm import ATM
 from schemas.office import Office
+from service.view_service import TellerNotFound
 from shared.base import logger
 from supplier.ort_supplier import RouteNotFound
 
@@ -49,5 +55,28 @@ async def get_routes(route: Route) -> Response:
     except RouteNotFound:
         raise HTTPException(
             detail="Route not found", status_code=status.HTTP_404_NOT_FOUND
+        )
+    return Response(content=result, headers={"Content-Type": "application/json"})
+
+
+@router.post("/routes/by-teller")
+async def get_routes_by_teller(route: RouteByTeller) -> Response:
+    """
+    Returns GeoJson route between start point and desired teller(ATM of Office)
+    """
+    try:
+        result = await container.view_service.get_route_by_id(
+            route.start,
+            teller_id=route.teller_id,
+            teller_type=route.teller_type,
+            profile=route.profile,
+        )
+    except RouteNotFound:
+        raise HTTPException(
+            detail="Route not found", status_code=status.HTTP_404_NOT_FOUND
+        )
+    except TellerNotFound:
+        raise HTTPException(
+            detail="Teller not found", status_code=status.HTTP_404_NOT_FOUND
         )
     return Response(content=result, headers={"Content-Type": "application/json"})
