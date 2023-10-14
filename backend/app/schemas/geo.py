@@ -13,6 +13,12 @@ class Coordinate(CamelizedBaseModel):
         return f"{self.lng},{self.lat}"
 
 
+class Metro(CamelizedBaseModel):
+    distance: float
+    name: str
+    line: str
+
+
 class GeoObject(CamelizedBaseModel):
     id_: uuid.UUID = Field(..., alias="id")
     address: str = Field(
@@ -26,3 +32,4 @@ class GeoObject(CamelizedBaseModel):
     duration_walk: float | None = Field(None, example=20)  # Minutes
     duration_car: float | None = Field(None, example=5)  # Minutes
     distance: float | None = Field(None, example=430)  # Metre
+    closest_metro: Metro | None = None
