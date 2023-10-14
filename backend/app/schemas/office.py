@@ -1,6 +1,6 @@
 import enum
 import uuid
-from datetime import datetime, time
+from datetime import date, datetime, time
 from typing import Any
 
 from pydantic import Field, validator
@@ -8,6 +8,9 @@ from pydantic import Field, validator
 from schemas.base import CamelizedBaseModel
 from schemas.dates import Weekdays, weekday_en_to_int, weekday_int_to_en
 from schemas.geo import GeoObject
+
+date_hout = tuple[date, int]
+Prediction = dict[date_hout, int]
 
 
 class Features(str, enum.Enum):

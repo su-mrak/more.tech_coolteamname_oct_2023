@@ -40,6 +40,7 @@ class DbRepository:
         self,
         lat: float,
         lng: float,
+        prediction: int,
         address: str,
         features: list[ATMFeatures],
     ) -> None:
@@ -48,6 +49,7 @@ class DbRepository:
                 address=address,
                 coordinate=self.make_point(lat=lat, lng=lng),
                 features=features,
+                prediction=prediction,
             )
             await session.execute(statement)
             await session.commit()
@@ -60,6 +62,7 @@ class DbRepository:
         address: str,
         lat: float,
         lng: float,
+        load: int,
         sale_point_name: str,
         individual_schedule: Any,
         legal_entity_schedule: Any,
@@ -79,6 +82,7 @@ class DbRepository:
                 features=features,
                 sale_point_format=sale_point_format,
                 office_type=office_type,
+                prediction=load,
             )
             await session.execute(statement)
             await session.commit()
@@ -101,6 +105,7 @@ class DbRepository:
                         address=row.address,
                         coordinate=DbRepository.wkb_to_coordinate(row.coordinate),
                         features=row.features,
+                        load=row.prediction,
                     )
                 )
             except ValidationError:
@@ -125,6 +130,7 @@ class DbRepository:
             office_type=row.office_type,
             sale_point_name=row.sale_point_name,
             individual_schedule=row.individual_schedule,
+            load=row.prediction,
         )
 
     async def get_atm(self, id_: uuid.UUID) -> ATMModel | None:
@@ -139,6 +145,7 @@ class DbRepository:
             address=row.address,
             coordinate=DbRepository.wkb_to_coordinate(row.coordinate),
             features=row.features,
+            load=row.prediction,
         )
 
     async def get_offices(self) -> list[OfficeModel]:
@@ -159,6 +166,7 @@ class DbRepository:
                         office_type=row.office_type,
                         sale_point_name=row.sale_point_name,
                         individual_schedule=row.individual_schedule,
+                        load=row.prediction,
                     )
                 )
             except ValidationError:
@@ -197,6 +205,7 @@ class DbRepository:
                         address=row.address,
                         coordinate=DbRepository.wkb_to_coordinate(row.coordinate),
                         features=row.features,
+                        load=row.prediction,
                     )
                 )
             except ValidationError:
@@ -236,6 +245,7 @@ class DbRepository:
                         office_type=row.office_type,
                         sale_point_name=row.sale_point_name,
                         individual_schedule=row.individual_schedule,
+                        load=row.prediction,
                     )
                 )
             except ValidationError:

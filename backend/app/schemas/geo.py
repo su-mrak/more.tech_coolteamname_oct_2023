@@ -22,3 +22,6 @@ class GeoObject(CamelizedBaseModel):
     coordinate: Coordinate = Field(
         ..., example=Coordinate(lat=55.478329, lng=37.298706)
     )
+    load: int = Field(3, example=1)
+    duration: float | None = Field(None, example=1)  # Minutes
+    distance: float | None = Field(None, example=1)  # KM

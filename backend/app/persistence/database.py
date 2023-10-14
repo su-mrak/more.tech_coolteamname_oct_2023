@@ -29,6 +29,7 @@ class GeoObject(Base):
 
     address = Column(Text)
     coordinate = Column(Geometry(geometry_type="POINT", srid=4326, spatial_index=True))
+    prediction = Column(BigInteger)
 
 
 class ATM(GeoObject):

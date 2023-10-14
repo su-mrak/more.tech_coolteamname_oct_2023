@@ -136,10 +136,11 @@ class UploadService:
                 atm_features.append(Features.WHEELCHAIR)
             if atm["allDay"]:
                 atm_features.append(Features.ALL_DAY)
-
+            prediction = randint(0, 5)  # noqa: S311
             await self.db_repository.insert_atm(
                 address=atm["address"],
                 features=atm_features,
+                prediction=prediction,
                 lng=atm["longitude"],
                 lat=atm["latitude"],
             )
@@ -167,13 +168,14 @@ class UploadService:
                 office_features.append(OfficeFeatures.LEGAL_ENTITY_LENDING)
             if UploadService._get_random_bool():
                 office_features.append(OfficeFeatures.LEGAL_ENTITY_SETTLEMENT_SERVICE)
-
+            prediction = randint(0, 5)  # noqa: S311
             await self.db_repository.insert_office(
                 address=office["address"],
                 lng=office["longitude"],
                 lat=office["latitude"],
                 sale_point_format=office["salePointFormat"],
                 features=office_features,
+                load=prediction,
                 office_type=office["officeType"],
                 sale_point_name=office["salePointName"],
                 metro_station=office["metroStation"],
