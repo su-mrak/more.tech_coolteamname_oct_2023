@@ -11,6 +11,7 @@ from sqlalchemy.schema import CreateTable
 
 from persistence.database import ATM, Office
 from schemas.atm import ATM as ATMModel
+from schemas.atm import Features as ATMFeatures
 from schemas.geo import Coordinate
 from schemas.office import Office as OfficeModel
 from shared.base import logger
@@ -34,14 +35,19 @@ class DbRepository:
                 raise Exception('Should be 1 from "select 1"')
 
     async def insert_atm(
-        self, address: str, all_day: bool, services: Any, lat: float, lng: float
+        self,
+        lat: float,
+        lng: float,
+        address: str,
+        all_day: bool,
+        features: list[ATMFeatures],
     ) -> None:
         async with self._engine.connect() as session:
             statement = insert(ATM).values(
                 address=address,
                 coordinate=f"SRID={self.srid};POINT({lng} {lat})",
                 all_day=all_day,
-                services=services,
+                services=features,
             )
             await session.execute(statement)
             await session.commit()
@@ -98,7 +104,7 @@ class DbRepository:
                         address=row.address,
                         coordinate=DbRepository.wkb_to_coordinate(row.coordinate),
                         all_day=row.all_day,
-                        services=row.services,
+                        features=row.services,
                     )
                 )
             except ValidationError:
@@ -173,3 +179,6 @@ class DbRepository:
 
     def compile_table(self, table) -> str:  # noqa: ANN001
         return CreateTable(table.__table__).compile(dialect=postgresql.dialect())
+
+    # def search_atms(self, lat: float, lng: float, limit: int, filters: ATMFilter) -> list[ATMModel]:
+    #     ...

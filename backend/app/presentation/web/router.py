@@ -1,3 +1,5 @@
+import enum
+
 from fastapi import APIRouter, HTTPException, status
 from fastapi.responses import Response
 
@@ -20,7 +22,18 @@ from supplier.ort_supplier import RouteNotFound
 router = APIRouter(prefix="")
 
 
-@router.get("/health", response_model=HealthResponse, response_model_exclude_none=True)
+class Tags(str, enum.Enum):
+    SERVICE = "service"
+    ROUTE = "route"
+    TELLERS = "tellers"
+
+
+@router.get(
+    "/health",
+    response_model=HealthResponse,
+    response_model_exclude_none=True,
+    tags=[Tags.SERVICE],
+)
 async def check_server_health() -> HealthResponse:
     try:
         await container.heath_service.check()
@@ -33,19 +46,29 @@ async def check_server_health() -> HealthResponse:
     return HealthResponse(status=HealthStatuses.OK)
 
 
-@router.get("/atms", response_model=list[ATM], response_model_exclude_none=True)
+@router.get(
+    "/atms",
+    response_model=list[ATM],
+    response_model_exclude_none=True,
+    tags=[Tags.TELLERS],
+)
 @cache(expire=60 * 5)
 async def get_atms() -> list[ATM]:
     return await container.view_service.get_atms()
 
 
-@router.get("/offices", response_model=list[Office], response_model_exclude_none=True)
+@router.get(
+    "/offices",
+    response_model=list[Office],
+    response_model_exclude_none=True,
+    tags=[Tags.TELLERS],
+)
 @cache(expire=60 * 5)
 async def get_offices() -> list[Office]:
     return await container.view_service.get_offices()
 
 
-@router.post("/routes")
+@router.post("/routes", tags=[Tags.ROUTE])
 async def get_routes(route: Route) -> Response:
     """
     Returns GeoJson route between 2 points
@@ -61,7 +84,7 @@ async def get_routes(route: Route) -> Response:
     return Response(content=result, headers={"Content-Type": "application/json"})
 
 
-@router.post("/routes/by-teller")
+@router.post("/routes/by-teller", tags=[Tags.ROUTE])
 async def get_routes_by_teller(route: RouteByTeller) -> Response:
     """
     Returns GeoJson route between start point and desired teller(ATM of Office)
@@ -84,7 +107,7 @@ async def get_routes_by_teller(route: RouteByTeller) -> Response:
     return Response(content=result, headers={"Content-Type": "application/json"})
 
 
-@router.post("/tellers", response_model=TopTellersResponse)
+@router.post("/tellers", response_model=TopTellersResponse, tags=[Tags.TELLERS])
 async def get_top_teller_filtered(
     top_tellers_request: GetTopTellers,
 ) -> TopTellersResponse:

@@ -5,7 +5,7 @@ import ujson
 from tqdm import tqdm
 
 from repository.db_repository import DbRepository
-from schemas.atm import ServiceConfiguration, Services
+from schemas.atm import Features
 from schemas.dates import WeekdaysRu, weekday_ru_to_en, weekday_ru_to_int, weekdays_ru
 from schemas.office import OpenHours, Schedule
 from shared.base import logger
@@ -100,7 +100,7 @@ class UploadService:
 
         return schedule
 
-    async def upload(self) -> None:
+    async def upload(self) -> None:  # noqa: CCR001
         with open(self.atms_json_filename) as f:
             atms: list[dict] = ujson.load(f)["atms"]
             logger.info("Fetched {} atms", len(atms))
@@ -110,106 +110,46 @@ class UploadService:
             logger.info("Fetched {} offices", len(offices))
 
         for atm in tqdm(atms):
+            features: list[Features] = []
+            if atm["services"]["blind"]["serviceActivity"] == "AVAILABLE":
+                features.append(Features.BLIND)
+            if atm["services"]["nfcForBankCards"]["serviceActivity"] == "AVAILABLE":
+                features.append(Features.NFC_FOR_BANK_CARDS)
+            if atm["services"]["supportsRub"]["serviceActivity"] == "AVAILABLE":
+                features.append(Features.WITHDRAWAL_RUB)
+                features.append(Features.REPLENISHMENT_RUB)
+            if atm["services"]["supportsEur"]["serviceActivity"] == "AVAILABLE":
+                features.append(Features.WITHDRAWAL_EUR)
+                features.append(Features.REPLENISHMENT_EUR)
+            if atm["services"]["supportsUsd"]["serviceActivity"] == "AVAILABLE":
+                features.append(Features.WITHDRAWAL_USD)
+                features.append(Features.REPLENISHMENT_USD)
+            if atm["services"]["qrRead"]["serviceActivity"] == "AVAILABLE":
+                features.append(Features.QR_READ)
+            if atm["services"]["wheelchair"]["serviceActivity"] == "AVAILABLE":
+                features.append(Features.WHEELCHAIR)
+
             await self.db_repository.insert_atm(
                 address=atm["address"],
                 all_day=atm["allDay"],
-                services=Services(
-                    blind=ServiceConfiguration(
-                        service_activity=atm["services"]["blind"]["serviceActivity"]
-                        == "AVAILABLE",
-                        service_capability=atm["services"]["blind"]["serviceCapability"]
-                        == "SUPPORTED",
-                    ),
-                    nfc_for_bank_cards=ServiceConfiguration(
-                        service_activity=atm["services"]["nfcForBankCards"][
-                            "serviceActivity"
-                        ]
-                        == "AVAILABLE",
-                        service_capability=atm["services"]["nfcForBankCards"][
-                            "serviceCapability"
-                        ]
-                        == "SUPPORTED",
-                    ),
-                    supports_charge_rub=ServiceConfiguration(
-                        service_activity=atm["services"]["supportsChargeRub"][
-                            "serviceActivity"
-                        ]
-                        == "AVAILABLE",
-                        service_capability=atm["services"]["supportsChargeRub"][
-                            "serviceCapability"
-                        ]
-                        == "SUPPORTED",
-                    ),
-                    supports_eur=ServiceConfiguration(
-                        service_activity=atm["services"]["supportsEur"][
-                            "serviceActivity"
-                        ]
-                        == "AVAILABLE",
-                        service_capability=atm["services"]["supportsEur"][
-                            "serviceCapability"
-                        ]
-                        == "SUPPORTED",
-                    ),
-                    supports_rub=ServiceConfiguration(
-                        service_activity=atm["services"]["supportsRub"][
-                            "serviceActivity"
-                        ]
-                        == "AVAILABLE",
-                        service_capability=atm["services"]["supportsRub"][
-                            "serviceCapability"
-                        ]
-                        == "SUPPORTED",
-                    ),
-                    supports_usd=ServiceConfiguration(
-                        service_activity=atm["services"]["supportsUsd"][
-                            "serviceActivity"
-                        ]
-                        == "AVAILABLE",
-                        service_capability=atm["services"]["supportsUsd"][
-                            "serviceCapability"
-                        ]
-                        == "SUPPORTED",
-                    ),
-                    qr_read=ServiceConfiguration(
-                        service_activity=atm["services"]["qrRead"]["serviceActivity"]
-                        == "AVAILABLE",
-                        service_capability=atm["services"]["qrRead"][
-                            "serviceCapability"
-                        ]
-                        == "SUPPORTED",
-                    ),
-                    wheelchair=ServiceConfiguration(
-                        service_activity=atm["services"]["wheelchair"][
-                            "serviceActivity"
-                        ]
-                        == "AVAILABLE",
-                        service_capability=atm["services"]["wheelchair"][
-                            "serviceCapability"
-                        ]
-                        == "SUPPORTED",
-                    ),
-                ).jsonable_encoder(),
+                features=features,
                 lng=atm["longitude"],
                 lat=atm["latitude"],
             )
 
-        for office in tqdm(offices):
-            await self.db_repository.insert_office(
-                address=office["address"],
-                lng=office["longitude"],
-                lat=office["latitude"],
-                sale_point_format=office["salePointFormat"],
-                my_branch=office["myBranch"],
-                kep=bool(office["kep"]),
-                has_ramp=office["hasRamp"] == "Y",
-                suo_availability=office["suoAvailability"] == "Y",
-                office_type=office["officeType"],
-                sale_point_name=office["salePointName"],
-                metro_station=office["metroStation"],
-                individual_schedule=self.schedule_to_dict(
-                    self.parse_schedule(office["openHoursIndividual"])
-                ),
-                legal_entity_schedule=self.schedule_to_dict(
-                    self.parse_schedule(office["openHours"])
-                ),
-            )
+        # for office in tqdm(offices):
+        #     await self.db_repository.insert_office(
+        #         address=office["address"],
+        #         lng=office["longitude"],
+        #         lat=office["latitude"],
+        #         sale_point_format=office["salePointFormat"],
+        #         my_branch=office["myBranch"],
+        #         kep=bool(office["kep"]),
+        #         has_ramp=office["hasRamp"] == "Y",
+        #         suo_availability=office["suoAvailability"] == "Y",
+        #         office_type=office["officeType"],
+        #         sale_point_name=office["salePointName"],
+        #         metro_station=office["metroStation"],
+        #         individual_schedule=self.schedule_to_dict(self.parse_schedule(office["openHoursIndividual"])),
+        #         legal_entity_schedule=self.schedule_to_dict(self.parse_schedule(office["openHours"])),
+        #     )

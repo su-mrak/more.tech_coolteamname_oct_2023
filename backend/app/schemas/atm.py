@@ -1,23 +1,23 @@
-from schemas.base import CamelizedBaseModel
+import enum
+
 from schemas.geo import GeoObject
 
 
-class ServiceConfiguration(CamelizedBaseModel):
-    service_activity: bool
-    service_capability: bool
+class Features(str, enum.Enum):
+    BLIND = "BLIND"
+    NFC_FOR_BANK_CARDS = "NFC_FOR_BANK_CARDS"
+    QR_READ = "QR_READ"
+    SUPPORT_CHARGE_RUB = "SUPPORT_CHARGE_RUB"
+    WHEELCHAIR = "WHEELCHAIR"
 
-
-class Services(CamelizedBaseModel):
-    blind: ServiceConfiguration
-    nfc_for_bank_cards: ServiceConfiguration
-    qr_read: ServiceConfiguration
-    supports_charge_rub: ServiceConfiguration
-    supports_eur: ServiceConfiguration
-    supports_rub: ServiceConfiguration
-    supports_usd: ServiceConfiguration
-    wheelchair: ServiceConfiguration
+    WITHDRAWAL_EUR = "WITHDRAWAL_EUR"
+    REPLENISHMENT_EUR = "REPLENISHMENT_EUR"
+    WITHDRAWAL_RUB = "WITHDRAWAL_RUB"
+    REPLENISHMENT_RUB = "REPLENISHMENT_RUB"
+    WITHDRAWAL_USD = "WITHDRAWAL_USD"
+    REPLENISHMENT_USD = "REPLENISHMENT_USD"
 
 
 class ATM(GeoObject):
     all_day: bool
-    services: Services
+    features: set[Features]

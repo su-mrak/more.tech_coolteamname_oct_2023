@@ -18,7 +18,7 @@ class AppSettings(BaseSettings):
     redis_host: str = "localhost"
     redis_port: int = 6379
 
-    ort_apikey: str
+    ort_apikey: str = ""
 
     model_config = SettingsConfigDict(env_prefix="_", env_file=".env")
 
