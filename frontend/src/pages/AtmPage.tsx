@@ -35,6 +35,10 @@ export default function AtmPage(): React.JSX.Element {
     }
   }, [atm, mapRef])
 
+  useEffect(() => {
+    return () => dispatch(prev => ({...prev, route: null}))
+  }, [dispatch])
+
   if (atm === undefined) {
     return <Navigate to="/"/>
   }

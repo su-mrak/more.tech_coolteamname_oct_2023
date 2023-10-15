@@ -33,6 +33,10 @@ export default function OfficePage(): React.JSX.Element {
     }
   }, [office, mapRef])
 
+  useEffect(() => {
+    return () => dispatch(prev => ({...prev, route: null}))
+  }, [dispatch])
+
   if (office === undefined) {
     return <Navigate to="/"/>
   }
