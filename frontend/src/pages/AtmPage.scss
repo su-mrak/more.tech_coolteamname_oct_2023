@@ -1,0 +1,116 @@
+.AtmPage {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  &__header {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    & > span {
+      font-size: 20px;
+      font-weight: 600;
+      line-height: 24px;
+      color: var(--tg-theme-text-color);
+    }
+
+    & > div {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+  }
+
+  &__address {
+    font-size: 15px;
+    line-height: 24px;
+    font-weight: 400;
+    color: var(--tg-theme-hint-color);
+  }
+
+  &__navigation {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  &__feature {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+
+    gap: 16px;
+
+    & > div {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    & span {
+      font-weight: 400;
+      font-size: 11px;
+      line-height: 16px;
+      color: var(--tg-theme-hint-color);
+    }
+
+    & span:first-child {
+      font-weight: 600;
+      font-size: 15px;
+      line-height: 20px;
+      color: var(--tg-theme-text-color);
+    }
+  }
+
+  &__separator {
+    width: 100%;
+    min-height: 1px;
+    background-color: var(--tg-theme-hint-color);
+    opacity: .7;
+  }
+
+  &__money {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    & > span {
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 24px;
+      color: var(--tg-theme-text-color);
+    }
+
+    & > div {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 16px
+    }
+  }
+
+  &__money-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    color: var(--tg-theme-button-color);
+    background-color: var(--tg-theme-secondary-bg-color);
+    font-size: 15px;
+    font-weight: 600;
+  }
+}

@@ -1,0 +1,42 @@
+.MenuContainer {
+  position: absolute;
+
+  top: 16px;
+  left: 16px;
+  bottom: 16px;
+
+  max-height: calc(100% - 32px);
+
+  background-color: var(--tg-theme-bg-color);
+  border-radius: 8px;
+
+  overflow: hidden;
+
+  padding: 16px;
+
+  display: flex;
+  flex-direction: column;
+
+  width: 350px;
+
+  &__content {
+    padding: 0 16px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+  }
+}
+
+.react-modal-sheet-container {
+  background-color: var(--tg-theme-bg-color) !important;
+  box-shadow: rgba(0, 0, 0, 0.2) 0 0 64px !important;
+}
+
+.react-modal-sheet-drag-indicator {
+  background-color: var(--tg-theme-secondary-bg-color) !important;
+}
+
+.react-modal-sheet-header {
+  background-color: var(--tg-theme-bg-color) !important;
+  border-radius: 20px 20px 0 0;
+}

@@ -1,0 +1,28 @@
+.Checkbox {
+  width: 24px;
+  height: 24px;
+  border-radius: 3px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: var(--tg-theme-secondary-bg-color);
+
+  &:hover {
+    box-shadow: inset 0 0 0 1px var(--tg-theme-button-color);
+  }
+
+  &__checkmark {
+    opacity: 0;
+    stroke: var(--tg-theme-button-text-color);
+  }
+
+  &__checked {
+    background-color: var(--tg-theme-button-color);
+  }
+
+  &__checked > &__checkmark {
+    opacity: 1;
+  }
+}

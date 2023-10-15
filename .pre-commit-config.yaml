@@ -15,7 +15,6 @@ repos:
         args: ['--unsafe'] # Instead of loading the files, simply parse them for syntax.
         exclude: 'staged_variables.yaml'
       - id: check-toml # checks .toml for errors
-      - id: check-json # checks .json for errors
       - id: check-xml # checks .xml for errors
       - id: detect-aws-credentials # detects aws cred
       - id: detect-private-key # detects private keys

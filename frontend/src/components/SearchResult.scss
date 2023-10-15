@@ -1,0 +1,45 @@
+.SearchResult {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  &__header {
+    color: var(--tg-theme-hint-color);
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 20px;
+    margin: 8px 0;
+  }
+
+  &__container {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 24px;
+    gap: 8px;
+    padding: 4px 0;
+    cursor: pointer;
+  }
+
+  &__address {
+    color: var(--tg-theme-text-color);
+  }
+
+  &__distance {
+    color: var(--tg-theme-button-color);
+    white-space: nowrap;
+    margin-left: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 4px;
+  }
+}

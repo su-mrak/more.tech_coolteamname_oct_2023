@@ -1,0 +1,12 @@
+.App {
+  &__location {
+    display: flex;
+
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color: var(--tg-theme-button-color);
+    border: 3px solid var(--tg-theme-button-text-color);
+    margin: 3px;
+  }
+}

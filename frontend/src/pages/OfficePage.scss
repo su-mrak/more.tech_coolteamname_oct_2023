@@ -1,0 +1,125 @@
+.OfficePage {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  &__header {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    & > span {
+      font-size: 20px;
+      font-weight: 600;
+      line-height: 24px;
+      color: var(--tg-theme-text-color);
+    }
+
+    & > div {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+  }
+
+  &__address {
+    font-size: 15px;
+    line-height: 24px;
+    font-weight: 400;
+    color: var(--tg-theme-hint-color);
+  }
+
+  &__navigation {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  &__title {
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 20px;
+    color: var(--tg-theme-text-color);
+  }
+
+  &__duration {
+    display: flex;
+    flex-direction: column;
+    margin-left: 12px;
+
+    & > div {
+      display: flex;
+      color: var(--tg-theme-button-color);
+      align-items: center;
+      justify-content: space-between;
+      font-weight: 600;
+      font-size: 15px;
+      white-space: nowrap;
+      gap: 8px;
+      width: 100%;
+    }
+  }
+
+  &__feature {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+
+    gap: 16px;
+
+    & > div {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    & span {
+      font-weight: 400;
+      font-size: 11px;
+      line-height: 16px;
+      color: var(--tg-theme-hint-color);
+    }
+
+    & span:first-child {
+      font-weight: 600;
+      font-size: 15px;
+      line-height: 20px;
+      color: var(--tg-theme-text-color);
+    }
+  }
+
+  &__separator {
+    width: 100%;
+    min-height: 1px;
+    background-color: var(--tg-theme-hint-color);
+    opacity: .7;
+  }
+
+  &__schedule {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    & > div {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 8px;
+
+      color: var(--tg-theme-hint-color);
+      font-weight: 400;
+      font-size: 11px;
+      line-height: 16px;
+      white-space: pre-line;
+    }
+  }
+}

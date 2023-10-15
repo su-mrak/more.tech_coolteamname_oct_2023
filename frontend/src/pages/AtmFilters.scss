@@ -1,0 +1,110 @@
+.AtmFilters {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  &__header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    font-size: 24px;
+    line-height: 28px;
+    font-weight: 600;
+
+    color: var(--tg-theme-text-color);
+
+    & > div {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+  }
+
+  &__reset {
+    color: var(--tg-theme-button-color);
+    font-size: 15px;
+    line-height: 20px;
+    font-weight: 600;
+    text-decoration: underline;
+    cursor: pointer;
+
+    margin-bottom: 8px;
+  }
+
+  &__money {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    & > span {
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 24px;
+      color: var(--tg-theme-text-color);
+    }
+
+    & > div {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 16px
+    }
+  }
+
+  &__money-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    color: var(--tg-theme-button-color);
+    background-color: var(--tg-theme-secondary-bg-color);
+    font-size: 15px;
+    font-weight: 600;
+
+    user-select: none;
+    cursor: pointer;
+
+    &:hover {
+      color: var(--tg-theme-button-hover-color);
+    }
+  }
+
+  &__money-button-active {
+    background-color: var(--tg-theme-button-color);
+    color: var(--tg-theme-button-text-color);
+
+    &:hover {
+      background-color: var(--tg-theme-button-hover-color);
+      color: var(--tg-theme-button-text-color);
+    }
+  }
+
+  &__separator {
+    width: 100%;
+    background-color: var(--tg-theme-hint-color);
+    min-height: 1px;
+    opacity: .7;
+  }
+
+  &__feature {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    height: 48px;
+    color: var(--tg-theme-text-color);
+  }
+}

@@ -1,0 +1,43 @@
+.SettingsButton {
+  all: unset;
+
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 40px;
+  min-height: 40px;
+  max-width: 40px;
+  max-height: 40px;
+
+  border-radius: 3px;
+  background-color: var(--tg-theme-secondary-bg-color);
+  cursor: pointer;
+
+  &__icon {
+    fill: var(--tg-theme-button-color);
+  }
+
+  &:enabled:hover {
+    box-shadow: inset 0 0 0 1px var(--tg-theme-button-color);
+  }
+
+  &:enabled:active {
+    box-shadow: inset 0 0 0 1px var(--tg-theme-text-color);
+  }
+
+  &:enabled:active > &__icon {
+    fill: var(--tg-theme-text-color);
+  }
+
+  &:disabled {
+    opacity: .7;
+    cursor: not-allowed;
+  }
+
+  &:disabled > &__icon {
+    fill: var(--tg-theme-hint-color);
+  }
+}

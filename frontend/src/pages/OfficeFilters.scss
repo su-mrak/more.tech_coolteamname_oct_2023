@@ -1,0 +1,64 @@
+.OfficeFilters {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  &__header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    font-size: 24px;
+    line-height: 28px;
+    font-weight: 600;
+
+    color: var(--tg-theme-text-color);
+
+    & > div {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+  }
+
+  &__reset {
+    color: var(--tg-theme-button-color);
+    font-size: 15px;
+    line-height: 20px;
+    font-weight: 600;
+    text-decoration: underline;
+    cursor: pointer;
+
+    margin-bottom: 8px;
+  }
+
+  &__subtitle {
+    color: var(--tg-theme-hint-color);
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 20px;
+  }
+
+  &__separator {
+    width: 100%;
+    background-color: var(--tg-theme-hint-color);
+    min-height: 1px;
+    opacity: .7;
+  }
+
+  &__feature {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    color: var(--tg-theme-text-color);
+  }
+}
